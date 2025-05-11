@@ -50,7 +50,7 @@ public class QuickController {
     }
 
     @GetMapping("/member")
-    public String getMember(@RequestParam(value = "empNo", defaultValue = '1', required = false) String empNo
+    public String getMember(@RequestParam(value = "empNo", defaultValue = "1", required = false) String empNo
     , @RequestParam("year") int year) {
         log.info("empNo: {}", empNo);
         log.info("year: {}", year);
