@@ -2,18 +2,38 @@ package com.helloworld.quickstart.controller;
 
 import com.helloworld.quickstart.dto.ItemDto;
 import com.helloworld.quickstart.dto.ResponseDto;
+import com.helloworld.quickstart.service.QuickService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 public class QuickController {
 
+    @Autowired // 스프링부트가 Bean 객체 생성
+    private QuickService quickService;
+
     @PostMapping("/item")
     public ResponseDto registerItem(@RequestBody ItemDto item) {
-        log.info("item: {}", item);
-        // Alt + Enter 자동 완성
-        new ResponseDto();
+
+        // QuickService quickService = new QuickService();
+        boolean b = quickService.registerItem(item);
+        if (b == true) {
+            ResponseDto responseDto = new ResponseDto();
+            responseDto.setMessage("ok");
+            return responseDto;
+        }
+
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setMessage("failed");
+        return responseDto;
+    }
+
+    @GetMapping("/item")
+    public ItemDto getItem(@RequestParam("id") String id) {
+        ItemDto res = quickService.getItemById(id);
+        return res;
     }
 
 
@@ -30,7 +50,7 @@ public class QuickController {
     }
 
     @GetMapping("/member")
-    public String getMember(@RequestParam("empNo") String empNo
+    public String getMember(@RequestParam(value = "empNo", defaultValue = '1', required = false) String empNo
     , @RequestParam("year") int year) {
         log.info("empNo: {}", empNo);
         log.info("year: {}", year);
